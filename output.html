@@ -1,0 +1,36 @@
+<head>
+<style>
+ul{list-style:square;font-family:Calibri;font-size:12px;}
+ul li label{padding: 3px;margin-left:3px;}
+ul li{margin: 10px;}
+ul li .File{background-color:#2bcfb6;}
+ul li .Folder{background-color:#ffd800;}
+ul li .size{background-color:#00ff90;}
+ul li .MimeType{background-color:#ff6a00;}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+var EntityListSerilized ="[{\"ParentName\":\"tax\",\"Name\":\"setup.Hoghooghi.6.0.0.2\",\"Size\":4468082,\"SizeMb\":4.47,\"MimeType\":null,\"EntityType\":0,\"Entity_List\":[{\"ParentName\":\"setup.Hoghooghi.6.0.0.2\",\"Name\":\"setup.Hoghooghi.6.0.0.2.exe\",\"Size\":4468082,\"SizeMb\":4.47,\"MimeType\":\"application/octet-stream\",\"EntityType\":1,\"Entity_List\":null}]},{\"ParentName\":\"tax\",\"Name\":\"setup.Hoghooghi.6.0.0.2.zip\",\"Size\":4444692,\"SizeMb\":4.44,\"MimeType\":\"application/x-zip-compressed\",\"EntityType\":1,\"Entity_List\":null}]"
+$(document).ready(function () {
+var EntityList = $.parseJSON(EntityListSerilized);
+$('body').append(CreateTree(EntityList));
+});
+function CreateTree(EntityList){
+var root = $('<ul>');
+$(EntityList).each(function () {
+var child = $('<li>');
+var value = " <label class="+(this.EntityType == 0 ? "Folder" : "File")+" \">" + this.Name + "</label>" + "<label class=\"size\">" + " (" + this.SizeMb + "MB)" + "</label>";
+if (this.EntityType == 1)
+value += " <label class=\"MimeType\">" + " MimeType:" + this.MimeType + "</label>";
+if (this.Entity_List != null && this.Entity_List.length != 0) {
+value += CreateTree(this.Entity_List)[0].outerHTML;
+}
+child.html(value);
+root.append(child);
+});
+return root;
+}
+</script>
+</head>
+<body>
+</body>
